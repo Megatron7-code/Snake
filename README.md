@@ -1,1 +1,1 @@
-# Tetris
+# Snake
