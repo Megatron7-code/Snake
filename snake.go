@@ -1,13 +1,14 @@
 package main
 
 import (
+	"container/list"
 	"fmt"
 	"github.com/jroimartin/gocui"
 	"sync"
 )
 
 const (
-	FillBack = '*'
+	FillBack = ' '
 	FillSnake = '+'
 	MaxX = 50
 	MaxY = 35
@@ -25,7 +26,7 @@ var (
 	snakeLock		sync.Mutex
 	snake			body
 	snakeRecord		[MaxX][MaxY] byte
-	snakeList		[]body
+	snakeList		= list.New()
 )
 
 func snakeSetup(){
@@ -43,7 +44,7 @@ func snakeLoad(b body){
 	//}
 	for x := b.X;x < b.X+SnakeLength;x++{
 		snakeRecord[b.Y][x] = FillSnake
-		snakeList = append(snakeList, body{b.Y, x})
+		snakeList.PushBack(body{b.Y, x})
 	}
 
 	//fmt.Printf("snakeRecord: %c", snakeRecord[15][10])
@@ -52,14 +53,15 @@ func snakeLoad(b body){
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 	snakeLock.Lock()
 	defer snakeLock.Unlock()
-	length := len(snakeList)
-	headBody := snakeList[0]
-	lastBody := snakeList[length-1]
-	newItem := body{headBody.X, headBody.Y-1}
-	snakeList = append(snakeList[:length-1], newItem)
+	// 取出头尾元素, 并删除尾元素
+	headBody := snakeList.Front().Value
+	lastBody := snakeList.Remove(snakeList.Back())
+	// 将新元素放进头部
+	snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y-1})
 
-	snakeRecord[headBody.X][headBody.Y-1] = FillSnake
-	snakeRecord[lastBody.X][lastBody.Y] = FillBack
+	// 更新snakeRecord
+	snakeRecord[headBody.(body).X][headBody.(body).Y-1] = FillSnake
+	snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 	return nil
 }
 
