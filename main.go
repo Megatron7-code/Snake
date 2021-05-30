@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Tick = 50 * time.Millisecond
+	Tick = 120 * time.Millisecond
 )
 
 var (
@@ -56,9 +56,9 @@ func snakeRun(g *gocui.Gui, wg *sync.WaitGroup){
 					if err != nil {
 						return err
 					}
-
 					v.Clear()
-					MoveRight()
+					// 默认向右
+					snakeMove(snakeVector, g, v)
 					for x:=0;x<MaxX;x++{
 						for y:=0;y<MaxY;y++{
 							if snakeRecord[x][y] == FillSnake {
@@ -75,6 +75,21 @@ func snakeRun(g *gocui.Gui, wg *sync.WaitGroup){
 				})
 		}
 	}
+}
+
+func snakeMove(vector string, g *gocui.Gui, v *gocui.View) error {
+	switch vector {
+	case "right":
+		MoveRight(g, v)
+	case "left":
+		MoveLeft(g, v)
+	case "up":
+		MoveUp(g, v)
+	case "down":
+		MoveDown(g, v)
+	}
+
+	return nil
 }
 
 func keybindings(g *gocui.Gui) error {

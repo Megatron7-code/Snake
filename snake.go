@@ -27,6 +27,7 @@ var (
 	snake			body
 	snakeRecord		[MaxX][MaxY] byte
 	snakeList		= list.New()
+	snakeVector		= "right"
 )
 
 func snakeSetup(){
@@ -60,6 +61,8 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 		lastBody := snakeList.Remove(snakeList.Back())
 		snakeRecord[headBody.(body).X][headBody.(body).Y-1] = FillSnake
 		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+
+		snakeVector = "left"
 	}
 
 	defer snakeLock.Unlock()
@@ -79,6 +82,8 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 		lastBody := snakeList.Remove(snakeList.Back())
 		snakeRecord[headBody.(body).X][headBody.(body).Y+1] = FillSnake
 		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+
+		snakeVector = "right"
 	}
 
 	defer snakeLock.Unlock()
@@ -100,6 +105,8 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 		lastBody := snakeList.Remove(snakeList.Back())
 		snakeRecord[headBody.(body).X-1][headBody.(body).Y] = FillSnake
 		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+
+		snakeVector = "up"
 	}
 
 	defer snakeLock.Unlock()
@@ -121,6 +128,8 @@ func MoveDown(g *gocui.Gui, v *gocui.View) error {
 		lastBody := snakeList.Remove(snakeList.Back())
 		snakeRecord[headBody.(body).X+1][headBody.(body).Y] = FillSnake
 		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+
+		snakeVector = "down"
 	}
 
 	defer snakeLock.Unlock()
