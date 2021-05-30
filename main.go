@@ -58,6 +58,7 @@ func snakeRun(g *gocui.Gui, wg *sync.WaitGroup){
 					}
 
 					v.Clear()
+					MoveRight()
 					for x:=0;x<MaxX;x++{
 						for y:=0;y<MaxY;y++{
 							if snakeRecord[x][y] == FillSnake {
