@@ -42,14 +42,8 @@ func snakeLoad(b body){
 	//for x :=10;x<15;x++{
 	//	snake[10][x] = '#'
 	//}
-	first := true
 	for x := b.X;x < b.X+SnakeLength;x++{
-		if first{
-			snakeRecord[b.Y][x] = '*'
-			first = false
-		}else{
-			snakeRecord[b.Y][x] = FillSnake
-		}
+		snakeRecord[b.Y][x] = FillSnake
 		snakeList.PushBack(body{b.Y, x})
 	}
 
@@ -58,16 +52,22 @@ func snakeLoad(b body){
 
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 	snakeLock.Lock()
-	defer snakeLock.Unlock()
-	// 取出头尾元素, 并删除尾元素
 	headBody := snakeList.Front().Value
-	lastBody := snakeList.Remove(snakeList.Back())
-	// 将新元素放进头部
-	snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y-1})
+	// 取出头尾元素, 并删除尾元素
+	//defer fmt.Printf("x: %d, y: %d\n", headBody.(body).X, headBody.(body).Y)
 
-	// 更新snakeRecord
-	snakeRecord[headBody.(body).X][headBody.(body).Y-1] = FillSnake
-	snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+	// 判断越界条件
+	if headBody.(body).Y-1 > 0{
+		// 将新元素放进头部
+		snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y-1})
+
+		// 更新snakeRecord
+		lastBody := snakeList.Remove(snakeList.Back())
+		snakeRecord[headBody.(body).X][headBody.(body).Y-1] = FillSnake
+		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+	}
+
+	defer snakeLock.Unlock()
 	return nil
 }
 
