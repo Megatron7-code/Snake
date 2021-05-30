@@ -9,9 +9,6 @@ import (
 )
 
 const (
-	CellWidth int = 2
-	CellHeight int = 1
-
 	Tick = 50 * time.Millisecond
 )
 
@@ -61,7 +58,6 @@ func snakeRun(g *gocui.Gui, wg *sync.WaitGroup){
 					}
 
 					v.Clear()
-					//fmt.Printf("resource: %c\n", snakeRecord[15][10])
 					for x:=0;x<MaxX;x++{
 						for y:=0;y<MaxY;y++{
 							if snakeRecord[x][y] == FillSnake {
