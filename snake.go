@@ -7,6 +7,8 @@ import (
 )
 
 const (
+	FillBack = '*'
+	FillSnake = '+'
 	MaxX = 50
 	MaxY = 35
 	SnakeLength = 3
@@ -40,7 +42,7 @@ func snakeLoad(b body){
 	//	snake[10][x] = '#'
 	//}
 	for x := b.X;x < b.X+SnakeLength;x++{
-		snakeRecord[b.Y][x] = '#'
+		snakeRecord[b.Y][x] = FillSnake
 		snakeList = append(snakeList, body{b.Y, x})
 	}
 
@@ -56,8 +58,8 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 	newItem := body{headBody.X, headBody.Y-1}
 	snakeList = append(snakeList[:length-1], newItem)
 
-	snakeRecord[headBody.X][headBody.Y-1] = '#'
-	snakeRecord[lastBody.X][lastBody.Y] = '*'
+	snakeRecord[headBody.X][headBody.Y-1] = FillSnake
+	snakeRecord[lastBody.X][lastBody.Y] = FillBack
 	return nil
 }
 

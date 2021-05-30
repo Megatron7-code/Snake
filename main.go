@@ -64,10 +64,10 @@ func snakeRun(g *gocui.Gui, wg *sync.WaitGroup){
 					//fmt.Printf("resource: %c\n", snakeRecord[15][10])
 					for x:=0;x<MaxX;x++{
 						for y:=0;y<MaxY;y++{
-							if snakeRecord[x][y] == '#' {
-								fmt.Fprintf(v, "%s", "+")
+							if snakeRecord[x][y] == FillSnake {
+								fmt.Fprintf(v, "%c", FillSnake)
 							}else{
-								fmt.Fprintf(v, "%s", "*")
+								fmt.Fprintf(v, "%c", FillBack)
 							}
 							if y % MaxY == 0 && x != 0{
 								fmt.Fprintf(v, "\n")
