@@ -42,8 +42,14 @@ func snakeLoad(b body){
 	//for x :=10;x<15;x++{
 	//	snake[10][x] = '#'
 	//}
+	first := true
 	for x := b.X;x < b.X+SnakeLength;x++{
-		snakeRecord[b.Y][x] = FillSnake
+		if first{
+			snakeRecord[b.Y][x] = '*'
+			first = false
+		}else{
+			snakeRecord[b.Y][x] = FillSnake
+		}
 		snakeList.PushBack(body{b.Y, x})
 	}
 
