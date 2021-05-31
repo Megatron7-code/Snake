@@ -4,12 +4,15 @@ import (
 	"container/list"
 	"fmt"
 	"github.com/jroimartin/gocui"
+	"math/rand"
 	"sync"
+	"time"
 )
 
 const (
 	FillBack = ' '
 	FillSnake = '+'
+	FillApple = '*'
 	MaxX = 50
 	MaxY = 35
 	SnakeLength = 3
@@ -28,6 +31,7 @@ var (
 	snakeRecord		[MaxX][MaxY] byte
 	snakeList		= list.New()
 	snakeVector		= "right"
+	apple			body
 )
 
 func snakeSetup(){
@@ -39,11 +43,20 @@ func snakeSetup(){
 }
 
 func snakeLoad(b body){
-	fmt.Print("snakeLoad...")
 	for x := b.X;x < b.X+SnakeLength;x++{
 		snakeRecord[b.Y][x] = FillSnake
 		snakeList.PushBack(body{b.Y, x})
 	}
+}
+
+func appleSetup(){
+	rand.Seed(time.Now().UnixNano())
+	apple.X = rand.Intn(MaxX * 0.5)
+	apple.Y = rand.Intn(MaxY * 0.6)
+	if snakeRecord[apple.X][apple.Y] == FillSnake{
+		appleSetup()
+	}
+	fmt.Println("apple: ", apple.X, apple.Y)
 }
 
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
@@ -59,8 +72,14 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 
 		// 更新snakeRecord
 		lastBody := snakeList.Remove(snakeList.Back())
+		// 吃苹果
+		if headBody.(body).X == apple.X && headBody.(body).Y-1 == apple.Y {
+			snakeList.PushFront(apple)
+			appleSetup()
+		}else{
+			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+		}
 		snakeRecord[headBody.(body).X][headBody.(body).Y-1] = FillSnake
-		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 
 		snakeVector = "left"
 	}
@@ -80,8 +99,14 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 
 		// 更新snakeRecord
 		lastBody := snakeList.Remove(snakeList.Back())
+		// 吃苹果
+		if headBody.(body).X == apple.X && headBody.(body).Y+1 == apple.Y {
+			snakeList.PushFront(apple)
+			appleSetup()
+		}else{
+			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+		}
 		snakeRecord[headBody.(body).X][headBody.(body).Y+1] = FillSnake
-		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 
 		snakeVector = "right"
 	}
@@ -103,8 +128,14 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 
 		// 更新snakeRecord
 		lastBody := snakeList.Remove(snakeList.Back())
+		// 吃苹果
+		if headBody.(body).X == apple.X-1 && headBody.(body).Y == apple.Y {
+			snakeList.PushFront(apple)
+			appleSetup()
+		}else{
+			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+		}
 		snakeRecord[headBody.(body).X-1][headBody.(body).Y] = FillSnake
-		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 
 		snakeVector = "up"
 	}
@@ -126,8 +157,14 @@ func MoveDown(g *gocui.Gui, v *gocui.View) error {
 
 		// 更新snakeRecord
 		lastBody := snakeList.Remove(snakeList.Back())
+		// 吃苹果
+		if headBody.(body).X == apple.X+1 && headBody.(body).Y == apple.Y {
+			snakeList.PushFront(apple)
+			appleSetup()
+		}else{
+			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
+		}
 		snakeRecord[headBody.(body).X+1][headBody.(body).Y] = FillSnake
-		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 
 		snakeVector = "down"
 	}
