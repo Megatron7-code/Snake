@@ -60,7 +60,7 @@ func appleSetup(){
 }
 
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
-	if snakeVector == "right" || snakeVector == "left" {
+	if snakeVector == "right"{
 		return nil
 	}
 	snakeLock.Lock()
@@ -68,7 +68,7 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 	headBody := snakeList.Front().Value
 
 	// 判断越界条件或者触碰到自己
-	if headBody.(body).Y-1 > 0{
+	if headBody.(body).Y-1 > 0 || !checkSnakeCollision() {
 		// 将新元素放进头部
 		snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y-1})
 
@@ -94,14 +94,14 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 }
 
 func MoveRight(g *gocui.Gui, v *gocui.View) error {
-	if snakeVector == "left" || snakeVector == "right" {
+	if snakeVector == "left"{
 		return nil
 	}
 	snakeLock.Lock()
 	headBody := snakeList.Front().Value
 
 	// 判断越界条件或者触碰到自己
-	if headBody.(body).Y+1 < MaxY{
+	if headBody.(body).Y+1 < MaxY || !checkSnakeCollision() {
 		// 将新元素放进头部
 		snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y+1})
 
@@ -127,7 +127,7 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 }
 
 func MoveUp(g *gocui.Gui, v *gocui.View) error {
-	if snakeVector == "down" || snakeVector == "up" {
+	if snakeVector == "down"{
 		return nil
 	}
 	snakeLock.Lock()
@@ -160,7 +160,7 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 }
 
 func MoveDown(g *gocui.Gui, v *gocui.View) error {
-	if snakeVector == "up" || snakeVector == "down" {
+	if snakeVector == "up"{
 		return nil
 	}
 	snakeLock.Lock()
@@ -190,4 +190,27 @@ func MoveDown(g *gocui.Gui, v *gocui.View) error {
 
 	defer snakeLock.Unlock()
 	return nil
+}
+
+// snake 碰撞检测
+func checkSnakeCollision() bool {
+	headBody := snakeList.Front().Value
+	x := headBody.(body).X
+	y := headBody.(body).Y
+	nums := 1
+	for i := 0;i < snakeList.Len();i++{
+		item := snakeList.Front()
+		node := item.Value
+		if node.(body).X == x && node.(body).Y == y{
+			nums++
+			if nums > 1 { break }
+		}else{
+			item.Next()
+		}
+	}
+	if nums > 1{
+		return true
+	}else{
+		return false
+	}
 }
