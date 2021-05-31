@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Tick = 120 * time.Millisecond
+	Tick = 150 * time.Millisecond
 )
 
 var (
@@ -60,11 +60,15 @@ func snakeRun(g *gocui.Gui, wg *sync.WaitGroup){
 					}
 					v.Clear()
 					// 打印苹果坐标
-					//v1, _ := g.View("console")
-					//v1.Clear()
-					//fmt.Fprintf(v1, "apple position:\nx:%d\ny:%d", apple.X, apple.Y)
-					//headBody := snakeList.Front().Value
-					//fmt.Fprintf(v1, "\nsnake postion:\nx:%d\ny:%d", headBody.(body).X, headBody.(body).Y)
+					v1, _ := g.View("console")
+					v1.Clear()
+					fmt.Fprintf(v1, "apple position:\nx:%d\ny:%d", apple.X, apple.Y)
+					headBody := snakeList.Front().Value
+					fmt.Fprintf(v1, "\nsnake postion:\nx:%d\ny:%d", headBody.(body).X, headBody.(body).Y)
+					if snakeList.Len() > VECTORY_CONDITION{
+						v1.Clear()
+						fmt.Fprintf(v1, "you win.")
+					}
 					// 默认向右
 					snakeMove(snakeVector, g, v)
 					// 渲染地图

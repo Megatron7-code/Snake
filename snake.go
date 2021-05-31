@@ -2,6 +2,7 @@ package main
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/jroimartin/gocui"
 	"math/rand"
 	"sync"
@@ -15,6 +16,7 @@ const (
 	MaxX = 50
 	MaxY = 35
 	SnakeLength = 3
+	VECTORY_CONDITION = 10
 )
 
 
@@ -58,11 +60,14 @@ func appleSetup(){
 }
 
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
+	if snakeVector == "right" || snakeVector == "left" {
+		return nil
+	}
 	snakeLock.Lock()
 	// 取出头尾元素, 并删除尾元素
 	headBody := snakeList.Front().Value
 
-	// 判断越界条件
+	// 判断越界条件或者触碰到自己
 	if headBody.(body).Y-1 > 0{
 		// 将新元素放进头部
 		snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y-1})
@@ -73,12 +78,15 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 		if headBody.(body).X == apple.X && headBody.(body).Y-1 == apple.Y {
 			snakeList.PushFront(apple)
 			appleSetup()
-		}else{
-			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
+		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		snakeRecord[headBody.(body).X][headBody.(body).Y-1] = FillSnake
 
 		snakeVector = "left"
+	}else{
+		v1, _ := g.View("console")
+		v1.Clear()
+		fmt.Fprintf(v1, "you loss.")
 	}
 
 	defer snakeLock.Unlock()
@@ -86,10 +94,13 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 }
 
 func MoveRight(g *gocui.Gui, v *gocui.View) error {
+	if snakeVector == "left" || snakeVector == "right" {
+		return nil
+	}
 	snakeLock.Lock()
 	headBody := snakeList.Front().Value
 
-	// 判断越界条件
+	// 判断越界条件或者触碰到自己
 	if headBody.(body).Y+1 < MaxY{
 		// 将新元素放进头部
 		snakeList.PushFront(body{headBody.(body).X, headBody.(body).Y+1})
@@ -100,12 +111,15 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 		if headBody.(body).X == apple.X && headBody.(body).Y+1 == apple.Y {
 			snakeList.PushFront(apple)
 			appleSetup()
-		}else{
-			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
+		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		snakeRecord[headBody.(body).X][headBody.(body).Y+1] = FillSnake
 
 		snakeVector = "right"
+	}else{
+		v1, _ := g.View("console")
+		v1.Clear()
+		fmt.Fprintf(v1, "you loss.")
 	}
 
 	defer snakeLock.Unlock()
@@ -113,11 +127,14 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 }
 
 func MoveUp(g *gocui.Gui, v *gocui.View) error {
+	if snakeVector == "down" || snakeVector == "up" {
+		return nil
+	}
 	snakeLock.Lock()
 	// 取出头尾元素, 并删除尾元素
 	headBody := snakeList.Front().Value
 
-	// 判断越界条件
+	// 判断越界条件或者触碰到自己
 	if headBody.(body).X > 0 {
 		snakeList.PushFront(body{headBody.(body).X-1, headBody.(body).Y})
 
@@ -127,12 +144,15 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 		if headBody.(body).X == apple.X-1 && headBody.(body).Y == apple.Y {
 			snakeList.PushFront(apple)
 			appleSetup()
-		}else{
-			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
+		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		snakeRecord[headBody.(body).X-1][headBody.(body).Y] = FillSnake
 
 		snakeVector = "up"
+	}else{
+		v1, _ := g.View("console")
+		v1.Clear()
+		fmt.Fprintf(v1, "you loss.")
 	}
 
 	defer snakeLock.Unlock()
@@ -140,11 +160,14 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 }
 
 func MoveDown(g *gocui.Gui, v *gocui.View) error {
+	if snakeVector == "up" || snakeVector == "down" {
+		return nil
+	}
 	snakeLock.Lock()
 	// 取出头尾元素, 并删除尾元素
 	headBody := snakeList.Front().Value
 
-	// 判断越界条件
+	// 判断越界条件或者触碰到自己
 	if headBody.(body).X+1 < 20 {
 		snakeList.PushFront(body{headBody.(body).X+1, headBody.(body).Y})
 
@@ -154,12 +177,15 @@ func MoveDown(g *gocui.Gui, v *gocui.View) error {
 		if headBody.(body).X == apple.X+1 && headBody.(body).Y == apple.Y {
 			snakeList.PushFront(apple)
 			appleSetup()
-		}else{
-			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
+		snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		snakeRecord[headBody.(body).X+1][headBody.(body).Y] = FillSnake
 
 		snakeVector = "down"
+	}else{
+		v1, _ := g.View("console")
+		v1.Clear()
+		fmt.Fprintf(v1, "you loss.")
 	}
 
 	defer snakeLock.Unlock()
