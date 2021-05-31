@@ -59,9 +59,8 @@ func appleSetup(){
 
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 	snakeLock.Lock()
-	headBody := snakeList.Front().Value
 	// 取出头尾元素, 并删除尾元素
-	//defer fmt.Printf("x: %d, y: %d\n", headBody.(body).X, headBody.(body).Y)
+	headBody := snakeList.Front().Value
 
 	// 判断越界条件
 	if headBody.(body).Y-1 > 0{
@@ -115,10 +114,8 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 
 func MoveUp(g *gocui.Gui, v *gocui.View) error {
 	snakeLock.Lock()
-	headBody := snakeList.Front().Value
-
 	// 取出头尾元素, 并删除尾元素
-	//defer fmt.Printf("x: %d, y: %d\n", headBody.(body).X, headBody.(body).Y)
+	headBody := snakeList.Front().Value
 
 	// 判断越界条件
 	if headBody.(body).X > 0 {
@@ -144,10 +141,8 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 
 func MoveDown(g *gocui.Gui, v *gocui.View) error {
 	snakeLock.Lock()
-	headBody := snakeList.Front().Value
-
 	// 取出头尾元素, 并删除尾元素
-	//defer fmt.Printf("x: %d, y: %d\n", headBody.(body).X, headBody.(body).Y)
+	headBody := snakeList.Front().Value
 
 	// 判断越界条件
 	if headBody.(body).X+1 < 20 {
