@@ -2,7 +2,6 @@ package main
 
 import (
 	"container/list"
-	"fmt"
 	"github.com/jroimartin/gocui"
 	"math/rand"
 	"sync"
@@ -49,15 +48,13 @@ func snakeLoad(b body){
 	}
 }
 
-func appleSetup(g *gocui.Gui){
+func appleSetup(){
 	rand.Seed(time.Now().UnixNano())
-	apple.X = rand.Intn(MaxX * 0.5)
-	apple.Y = rand.Intn(MaxY * 0.6)
-	if snakeRecord[apple.X][apple.Y] == FillSnake{
-		appleSetup(g)
+	apple.X = rand.Intn(19)
+	apple.Y = rand.Intn(34)
+	if snakeRecord[apple.X][apple.Y] == FillSnake || apple.X <= 0 || apple.Y <=0 {
+		appleSetup()
 	}
-	v, _ := g.View("console")
-	fmt.Fprintf(v, "apple: %d, %d", apple.X, apple.Y)
 }
 
 func MoveLeft(g *gocui.Gui, v *gocui.View) error {
@@ -76,7 +73,7 @@ func MoveLeft(g *gocui.Gui, v *gocui.View) error {
 		// 吃苹果
 		if headBody.(body).X == apple.X && headBody.(body).Y-1 == apple.Y {
 			snakeList.PushFront(apple)
-			appleSetup(g)
+			appleSetup()
 		}else{
 			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
@@ -103,7 +100,7 @@ func MoveRight(g *gocui.Gui, v *gocui.View) error {
 		// 吃苹果
 		if headBody.(body).X == apple.X && headBody.(body).Y+1 == apple.Y {
 			snakeList.PushFront(apple)
-			appleSetup(g)
+			appleSetup()
 		}else{
 			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
@@ -132,7 +129,7 @@ func MoveUp(g *gocui.Gui, v *gocui.View) error {
 		// 吃苹果
 		if headBody.(body).X == apple.X-1 && headBody.(body).Y == apple.Y {
 			snakeList.PushFront(apple)
-			appleSetup(g)
+			appleSetup()
 		}else{
 			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
@@ -161,7 +158,7 @@ func MoveDown(g *gocui.Gui, v *gocui.View) error {
 		// 吃苹果
 		if headBody.(body).X == apple.X+1 && headBody.(body).Y == apple.Y {
 			snakeList.PushFront(apple)
-			appleSetup(g)
+			appleSetup()
 		}else{
 			snakeRecord[lastBody.(body).X][lastBody.(body).Y] = FillBack
 		}
