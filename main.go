@@ -35,7 +35,7 @@ func main() {
 
 	// Init snake, apple
 	snakeSetup()
-	appleSetup()
+	appleSetup(g)
 
 	mainWG.Add(1)
 	go snakeRun(g, &mainWG)
