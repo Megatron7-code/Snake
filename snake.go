@@ -208,7 +208,7 @@ func checkSnakeCollision() bool {
 			item.Next()
 		}
 	}
-	if nums > 1{
+	if nums > 1 {
 		return true
 	}else{
 		return false

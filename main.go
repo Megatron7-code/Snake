@@ -18,7 +18,7 @@ var (
 )
 
 func main() {
-	// 初始化全局对象
+	// 初始全局对象
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
